@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>טוסט נקניק לתלמידים</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Secular+One&display=swap">
+<style>
+/* Layout: yellow hero with price stamp, notices, one order card, sticky total bar; order leaves by WhatsApp. */
+:root {
+  --bg: #FFFBEF; --ink: #26211D; --muted: #6B6258; --card: #FFFFFF; --line: #E8DFC8; --field: #FFFFFF;
+  --hero-bg: #F4B400; --hero-ink: #26211D; --stamp-bg: #D2392B; --stamp-ink: #FFFFFF;
+  --accent: #D2392B; --accent-ink: #FFFFFF; --ok: #2F7D4F;
+  --font-display: "Secular One", "Heebo", Arial, sans-serif; --font-body: "Heebo", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1D1916; --ink: #F6EEDC; --muted: #B5A995; --card: #2A2420; --line: #41382F; --field: #241F1B;
+    --stamp-bg: #FF6B5A; --stamp-ink: #2A1410; --accent: #FF6B5A; --accent-ink: #2A1410; --ok: #6CCB8E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1D1916; --ink: #F6EEDC; --muted: #B5A995; --card: #2A2420; --line: #41382F; --field: #241F1B;
+  --stamp-bg: #FF6B5A; --stamp-ink: #2A1410; --accent: #FF6B5A; --accent-ink: #2A1410; --ok: #6CCB8E; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.5; direction: rtl; padding-block: 0 110px; }
+.hero { background: var(--hero-bg); color: var(--hero-ink); padding: 28px 16px 36px; }
+.wrap { max-width: 640px; margin-inline: auto; }
+.hero .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; }
+.hero-text { flex: 1 1 260px; min-width: 0; }
+.eyebrow { font-weight: 700; font-size: 14px; letter-spacing: .06em; margin: 0 0 6px; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(38px, 11vw, 56px); line-height: 1.05; margin: 0 0 10px; text-wrap: balance; }
+.lead { margin: 0; font-size: 17px; max-width: 30ch; }
+.art { position: relative; flex: 0 0 auto; width: 190px; height: 150px; margin-inline: auto; }
+.art svg { width: 100%; height: 100%; display: block; }
+.stamp { position: absolute; inset-block-start: -10px; inset-inline-start: -14px; width: 92px; height: 92px; border-radius: 50%; background: var(--stamp-bg); color: var(--stamp-ink); display: grid; place-content: center; text-align: center; transform: rotate(-10deg); font-family: var(--font-display); line-height: 1; }
+.stamp small { font-family: var(--font-body); font-weight: 700; font-size: 11px; margin-bottom: 2px; }
+.stamp b { font-weight: 400; font-size: 34px; }
+.stamp span { font-size: 15px; }
+main.wrap { padding: 20px 16px 0; display: grid; gap: 16px; }
+.notice { margin: 0; background: var(--hero-bg); color: var(--hero-ink); border-radius: 12px; padding: 12px 16px; font-size: 17px; }
+.notice.fresh { background: var(--card); color: var(--ink); border: 1.5px solid var(--hero-bg); font-size: 16px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: grid; gap: 18px; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: 24px; margin: 0; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+label, .lbl { font-weight: 700; font-size: 15px; }
+.opt { font-weight: 400; color: var(--muted); }
+input[type=text], textarea { width: 100%; font: inherit; color: var(--ink); background: var(--field); border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 12px; }
+textarea { resize: vertical; min-height: 64px; }
+input[type=text]:focus-visible, textarea:focus-visible, button:focus-visible, a:focus-visible, .chip input:focus-visible + span { outline: 3px solid var(--accent); outline-offset: 2px; }
+.stepper { display: inline-flex; align-items: center; gap: 4px; background: var(--field); border: 1.5px solid var(--line); border-radius: 12px; padding: 4px; width: fit-content; }
+.stepper button { width: 44px; height: 44px; border: 0; border-radius: 9px; background: var(--hero-bg); color: var(--hero-ink); font: 700 24px var(--font-body); cursor: pointer; }
+.stepper button:disabled { opacity: .35; cursor: default; }
+.stepper output { min-width: 48px; text-align: center; font-family: var(--font-display); font-size: 26px; font-variant-numeric: tabular-nums; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip span { display: inline-block; padding: 9px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--field); cursor: pointer; font-weight: 500; user-select: none; }
+.chip input:checked + span { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.err { color: var(--accent); font-weight: 700; margin: 0; min-height: 1.4em; }
+.bar { position: fixed; inset-inline: 0; inset-block-end: 0; background: var(--card); border-top: 1px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); }
+.bar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.total { line-height: 1.15; }
+.total small { display: block; color: var(--muted); font-size: 13px; }
+.total b { font-family: var(--font-display); font-weight: 400; font-size: 28px; font-variant-numeric: tabular-nums; }
+.btn { border: 0; border-radius: 12px; background: var(--accent); color: var(--accent-ink); font: 700 18px var(--font-body); padding: 14px 24px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); font-size: 15px; padding: 10px 16px; }
+.done-card h2 { color: var(--ok); }
+.summary { white-space: pre-wrap; background: var(--field); border: 1px dashed var(--line); border-radius: 10px; padding: 12px; margin: 0; font-family: var(--font-body); overflow-wrap: anywhere; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.hint { color: var(--muted); margin: 0; font-size: 14px; }
+.stock { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn.ghost[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.chip input:disabled + span { opacity: .5; text-decoration: line-through; cursor: not-allowed; }
+.paybox { display: grid; gap: 8px; border: 1.5px solid var(--hero-bg); border-radius: 12px; padding: 14px; }
+.paynum { font-family: var(--font-display); font-size: 26px; font-variant-numeric: tabular-nums; }
+@media (max-width: 420px) { .row2 { grid-template-columns: 1fr; } .stamp { inset-inline-start: -6px; } }
+@media (prefers-reduced-motion: no-preference) { .stamp { animation: pop .5s ease-out; } @keyframes pop { from { transform: rotate(-10deg) scale(.6); opacity: 0; } } }
+</style>
+</head>
+<body>
+<div lang="he" dir="rtl">
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <p class="eyebrow">פינת הטוסט של בית הספר</p>
+      <h1>טוסט נקניק חם, מוכן להפסקה</h1>
+      <p class="lead">מזמינים עכשיו, ובהפסקת הצהריים ביום חמישי ניגשים לקחת.</p>
+    </div>
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 190 150" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#26211D" stroke-width="4" stroke-linejoin="round">
+          <path d="M30 70 Q30 38 62 38 H112 Q144 38 144 70 V120 Q144 130 134 130 H40 Q30 130 30 120 Z" fill="#EDB765"/>
+          <rect x="14" y="78" width="162" height="26" rx="13" fill="#B8412E" transform="rotate(-8 95 91)"/>
+          <path d="M46 82 Q46 54 74 54 H124 Q152 54 152 82 V124 Q152 134 142 134 H56 Q46 134 46 124 Z" fill="#EDB765"/>
+        </g>
+        <path d="M60 94 q12 -9 24 0 t24 0 t24 0" fill="none" stroke="#B97A2E" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <div class="stamp"><small>מבצע פתיחה</small><b>11</b><span>₪ ליחידה</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="notice" role="note"><b>שימו לב:</b> הטוסטים מגיעים רק ביום חמישי, בהפסקת צהריים.</p>
+  <p class="notice fresh" role="note">מכינים את הטוסטים ממש לפני ההפסקה, אז הם מגיעים חמים וטריים ואין צורך לחמם אותם במיקרוגל.</p>
+  <p class="notice fresh" role="note"><b>נקודת האיסוף:</b> באזור הכושר, ליד הכניסה.</p>
+
+  <form id="orderForm" class="card" novalidate autocomplete="off">
+    <h2>מה מזמינים?</h2>
+    <div class="row2">
+      <div class="field"><label for="name">שם התלמיד/ה</label><input type="text" id="name" maxlength="40" placeholder="למשל: נועה כהן"></div>
+      <div class="field"><label for="grade">כיתה</label><input type="text" id="grade" maxlength="10" placeholder="למשל: ז׳2"></div>
+    </div>
+    <div class="field">
+      <span class="lbl" id="qtyLbl">כמה טוסטים?</span>
+      <div class="stepper" role="group" aria-labelledby="qtyLbl">
+        <button type="button" id="plus" aria-label="הוסיפו טוסט">+</button>
+        <output id="qty" aria-live="polite">1</output>
+        <button type="button" id="minus" aria-label="הורידו טוסט" disabled>−</button>
+      </div>
+    </div>
+    <div class="field">
+      <span class="lbl">רטבים <span class="opt">(אפשר כמה)</span></span>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" name="sauce" value="קטשופ" data-key="ketchup"><span>קטשופ</span></label>
+        <label class="chip"><input type="checkbox" name="sauce" value="חרדל" data-key="mustard"><span>חרדל</span></label>
+        <label class="chip"><input type="checkbox" name="sauce" value="מיונז" data-key="mayo"><span>מיונז</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <span class="lbl">תוספת <span class="opt">(שקל אחד לכל טוסט)</span></span>
+      <div class="chips"><label class="chip"><input type="checkbox" id="pickles" data-key="pickles"><span>חמוצים +1 ₪</span></label></div>
+    </div>
+    <div class="field">
+      <span class="lbl">איך משלמים?</span>
+      <div class="chips">
+        <label class="chip"><input type="radio" name="pay" value="cash" checked><span>משלמים באיסוף</span></label>
+        <label class="chip"><input type="radio" name="pay" value="prepaid"><span>מראש בביט או פייבוקס</span></label>
+      </div>
+    </div>
+    <div class="field"><label for="note">הערה <span class="opt">(לא חובה)</span></label><textarea id="note" maxlength="160" placeholder="למשל: בלי חרדל"></textarea></div>
+    <p class="err" id="err" role="alert"></p>
+  </form>
+
+  <section id="doneCard" class="card done-card" hidden>
+    <h2 id="doneTitle">עוד שלב אחד: שולחים בוואטסאפ</h2>
+    <p class="hint" id="doneNote">ההזמנה נשלחת רק אחרי שלוחצים על הכפתור ושולחים את ההודעה.</p>
+    <pre class="summary" id="summary"></pre>
+    <div class="paybox" id="payBox" hidden>
+      <b>תשלום מראש בביט או פייבוקס</b>
+      <p class="hint">מעבירים <span id="payAmount"></span> למספר:</p>
+      <div class="actions">
+        <span class="paynum" dir="ltr">054-6548034</span>
+        <button class="btn ghost" type="button" id="copyNum">העתקת המספר</button>
+      </div>
+      <p class="hint">כדאי לכתוב בהעברה את שם התלמיד/ה.</p>
+    </div>
+    <div class="actions">
+      <a class="btn" id="waLink" target="_blank" rel="noopener">שליחה בוואטסאפ</a>
+      <button class="btn ghost" type="button" id="copyBtn">העתקת ההזמנה</button>
+      <button class="btn ghost" type="button" id="againBtn">הזמנה נוספת</button>
+    </div>
+  </section>
+
+</main>
+
+<div class="bar" id="bar">
+  <div class="wrap">
+    <div class="total"><small>סה״כ לתשלום</small><b id="total">11 ₪</b></div>
+    <button class="btn" type="submit" form="orderForm" id="sendBtn">להזמנה</button>
+  </div>
+</div>
+</div>
+<script>
+
+(function () {
+  var PRICE = 11, MAX = 10;
+  /* מספר הוואטסאפ של המוכר בפורמט בינלאומי, למשל 972501234567. ריק = הלקוח בוחר למי לשלוח. */
+  var WA_PHONE = "972549276927";
+  /* כתובת אפליקציית ה-Apps Script (נגמרת ב-/exec). ריק = האתר עובד בלי שרת וההזמנות נשלחות בוואטסאפ בלבד. */
+  var API = "";
+  var $ = function (id) { return document.getElementById(id); };
+  var qty = 1, lastText = "";
+
+  function fmt(n) { return n + " ₪"; }
+  function unit() { return PRICE + ($("pickles").checked ? 1 : 0); }
+  function render() {
+    $("qty").textContent = qty;
+    $("total").textContent = fmt(qty * unit());
+    $("minus").disabled = qty <= 1;
+    $("plus").disabled = qty >= MAX;
+  }
+  $("plus").onclick = function () { if (qty < MAX) { qty++; render(); } };
+  $("minus").onclick = function () { if (qty > 1) { qty--; render(); } };
+  $("pickles").addEventListener("change", render);
+
+  function sauces() {
+    return Array.prototype.map.call(document.querySelectorAll('input[name="sauce"]:checked'), function (i) { return i.value; });
+  }
+  function buildText(o) {
+    var t = "הזמנת טוסט נקניק\nשם: " + o.name + "\nכיתה: " + o.grade + "\nכמות: " + o.qty +
+      "\nרטבים: " + (o.sauces.length ? o.sauces.join(", ") : "ללא") + "\nחמוצים: " + (o.pickles ? "כן" : "לא") +
+      "\nתשלום: " + (o.prepaid ? "מראש בביט/פייבוקס" : "באיסוף");
+    if (o.note) t += "\nהערה: " + o.note;
+    return t + "\nסה״כ: " + fmt(o.total);
+  }
+
+  function showDone(o, saved) {
+    lastText = buildText(o);
+    $("payBox").hidden = !o.prepaid;
+    $("payAmount").textContent = fmt(o.total);
+    $("summary").textContent = lastText;
+    $("waLink").href = "https://wa.me/" + WA_PHONE + "?text=" + encodeURIComponent(lastText);
+    $("waLink").hidden = saved;
+    $("doneTitle").textContent = saved ? "ההזמנה התקבלה" : "עוד שלב אחד: שולחים בוואטסאפ";
+    $("doneNote").textContent = saved ? "נתראה ביום חמישי, בהפסקת צהריים." : "ההזמנה נשלחת רק אחרי שלוחצים על הכפתור ושולחים את ההודעה.";
+    $("doneCard").hidden = false; $("orderForm").hidden = true; $("bar").hidden = true;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  $("orderForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = $("name").value.trim(), grade = $("grade").value.trim();
+    if (!name || !grade) { $("err").textContent = "נא למלא שם וכיתה."; (name ? $("grade") : $("name")).focus(); return; }
+    $("err").textContent = "";
+    var o = { name: name, grade: grade, qty: qty, sauces: sauces(), pickles: $("pickles").checked, note: $("note").value.trim(), total: qty * unit(),
+      prepaid: document.querySelector('input[name="pay"]:checked').value === "prepaid" };
+    if (!API) { showDone(o, false); return; }
+    var btn = $("sendBtn");
+    btn.disabled = true; btn.textContent = "שולחים...";
+    fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ action: "order", order: o }) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (res && res.ok) { o.total = res.total || o.total; showDone(o, true); }
+        else if (res && res.error === "out") { $("err").textContent = "אחד הפריטים אזל. בחרו שוב בלי הפריט שסומן אזל."; refreshStock(); }
+        else { throw new Error("save"); }
+      })
+      .catch(function () { showDone(o, false); })
+      .then(function () { btn.disabled = false; btn.textContent = "להזמנה"; });
+  });
+
+  function selectSummary() {
+    var r = document.createRange(); r.selectNodeContents($("summary"));
+    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  $("copyBtn").onclick = function () {
+    var done = function () { $("copyBtn").textContent = "הועתק"; setTimeout(function () { $("copyBtn").textContent = "העתקת ההזמנה"; }, 1600); };
+    try { navigator.clipboard.writeText(lastText).then(done, selectSummary); } catch (e) { selectSummary(); }
+  };
+  $("copyNum").onclick = function () {
+    var done = function () { $("copyNum").textContent = "הועתק"; setTimeout(function () { $("copyNum").textContent = "העתקת המספר"; }, 1600); };
+    try { navigator.clipboard.writeText("0546548034").then(done, function () {}); } catch (e) {}
+  };
+  $("againBtn").onclick = function () {
+    document.querySelector('input[name="pay"][value="cash"]').checked = true;
+    $("doneCard").hidden = true; $("orderForm").hidden = false; $("bar").hidden = false;
+    $("note").value = ""; $("pickles").checked = false; qty = 1; render();
+  };
+  /* מלאי: נטען מהשרת. הערכים כאן הם ברירת מחדל כשאין שרת (false = יש במלאי). */
+  var out = { ketchup: false, mustard: false, mayo: false, pickles: false };
+  function applyStock() {
+    Array.prototype.forEach.call(document.querySelectorAll(".chip input[data-key]"), function (i) {
+      var sp = i.nextElementSibling;
+      if (!sp.dataset.base) sp.dataset.base = sp.textContent;
+      var isOut = !!out[i.dataset.key];
+      i.disabled = isOut;
+      if (isOut) i.checked = false;
+      sp.textContent = sp.dataset.base + (isOut ? " · אזל" : "");
+    });
+    render();
+  }
+  function refreshStock() {
+    if (!API) return Promise.resolve();
+    return fetch(API).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.out) { out = d.out; applyStock(); }
+    }).catch(function () {});
+  }
+
+  applyStock();
+  refreshStock();
+  setInterval(refreshStock, 60000);
+})();
+</script>
+</body>
+</html>
